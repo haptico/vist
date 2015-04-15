@@ -5,18 +5,31 @@ require 'vendor/autoload.php';
 
 use Parse\ParseUser;
 use Parse\ParseClient;
+use Parse\ParseException;
 ParseClient::initialize('rj63ADuUbYBR6zDxxa1oh0OGSGkTjYnQMfkzPk4z', 'Y7DrDxQa3NXUanN3ecPfZdZ9BRp9PrsiVk61hPnB', 'bGPHnB5JccLtSX7M1goS8vMdskuPqi0TdcpWCgpG');
 
 if(count($_POST)>0 && $_POST["acao"] == "REGISTRO"){
     $usuario = trim($_POST["usuario"]);
+    $email = trim($_POST["email"]);
     $senha = trim($_POST["senha"]);
-    if($usuario != "" && $senha != ""){
-        try {
-            $user = ParseUser::logIn($usuario, $senha);
-            die(print_r($user));
-            header("Location: index.php");
-        } catch (ParseException $error) {
-            $msg = $error->getMessage();
+    $confSenha = trim($_POST["conf_senha"]);
+    if($usuario != "" && $senha != "" && $email != "" && $confSenha != ""){
+        if($senha == $confSenha) {
+            $user = new ParseUser();
+            $user->set("username", $usuario);
+            $user->set("password", $senha);
+            $user->set("email", $email);
+            try {
+                $user->signUp();
+                $msg = "Registro efetuado com sucesso.<br />"
+                     . "Clique <a href='login.php'>aqui</a> para efetuar login na ferramenta.";
+            } catch (ParseException $ex) {
+                $msg = "Erro: " . $ex->getCode() . " " . $ex->getMessage();
+            } catch (Exception $ex){
+                $msg = "Erro: " . $ex->getCode() . " " . $ex->getMessage();
+            }
+        } else {
+            $msg = "A senha e a confirmação de senha diferem.";
         }
     }else{
         $msg = "Preencha os campos Login e Senha.";
@@ -60,7 +73,7 @@ if(count($_POST)>0 && $_POST["acao"] == "REGISTRO"){
                 <form method="post" action="#" id="registro">
                     <input type="hidden" name="acao" value="REGISTRO" />
                     <fieldset>
-                        <h1><small><a class="brand cufon-font-blk" href="#">Vistoria</a></small></h1>
+                        <h1><small><span class="brand cufon-font-blk">Vistoria</span></small></h1>
                         <div class="control-group">
                             <label class="control-label cufon-font" for="usuario">Usuário</label>
                             <div class="controls">
@@ -119,12 +132,12 @@ if(count($_POST)>0 && $_POST["acao"] == "REGISTRO"){
 
             </section>
 
-            <!-- Login page navigation >
+            <!-- Login page navigation -->
             <nav>
                 <ul>
-                    <li><a class="cufon-font" href="#" id="PerdeuAsenha">Perdeu a senha?</a></li>
-                    <li><a class="cufon-font" href="#" id="voltar" style="display: none;">Voltar</a></li>
-                    <li><a class="cufon-font" href="#">Suporte</a></li>
+                    <li><a class="cufon-font" href="login.php">Voltar</a></li>
+                    <!--li><a class="cufon-font" href="#" id="voltar" style="display: none;">Voltar</a></li>
+                    <li><a class="cufon-font" href="#">Suporte</a></li-->
                 </ul>
             </nav>
             <!-- Login page navigation -->

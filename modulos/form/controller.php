@@ -1,31 +1,40 @@
 <?php
+include "class/Form.php";
 use Parse\ParseQuery;
 use Parse\ParseObject;
 
-$msg = "";
-if(isset($_POST["acao"]) && $_POST["acao"] == "GRAVAR"){
-    $nomeForm = trim($_POST["nome_form"]);
-    if ($nomeForm <> "") {
-        $query = new ParseQuery("form");
-        $query->equalTo("nome", $nomeForm);
-        $results = $query->find();
-        if (count($results) > 0) {
-            $msg = "Já existe um formulário cadastrado com esse nome";
-        } else {
-            $form = ParseObject::create("form");
-            $form->set("nome", $nomeForm);
-            $form->save();
-            $msg = "Formulário criado com sucesso.";
-        }
+$ID = (isset($_POST['ID']) && $_POST['ID'] != '')?$_POST['ID']:'0';
+$target = isset($_POST['target'])?$_POST["target"]:"";
+$msg = '';
+$erro = false;
+//============ACOES============================
+if(ACAO == 'GRAVAR'){
+    $res = Form::gravaForm($_POST);
+    $msg = $res["MSG"];
+    if (!$res["ERRO"]){
+        $target = "lista";
     } else {
-        $msg = "Informe o nome do formulário";
+        $target = "cadastro";
     }
+}elseif(ACAO == 'EXCLUIR'){
+    $res = Form::excluiForm($_POST);
+    $msg = $res["MSG"];
 }
-?>
-<script type="text/javascript" src="modulos/form/js/cadastro.js"></script>
-<div>
-    <input type="hidden" value="<?= $msg ?>" id="msg" name="msg"/>
-    <input type="hidden" name="incluir" id="incluir" value="" />
-    Formulário: <input type="text" id="nome_form" name="nome_form" />
-    <input type="button" id="btn_gravar" value="Enviar" />
-</div>
+//============FIM ACOES============================
+
+//============CARREGA A VIEW============================
+$target = ($target != '')?$target:'lista';
+if($target == 'cadastro'){
+    $data = Form::getDataCadastro($ID);
+}elseif($target == 'lista'){
+    $data = Form::getDataLista();
+}
+
+//========TRATA O TARGET E O DIRECIONAMENTO
+echo '<input type="hidden" name="target" id="target" value="lista" />';
+echo '<input type="hidden" id="msg" value="'.$msg.'" />';
+echo '<input type="hidden" name="ID" id="ID" value="'.$ID.'" />';
+$pathFile = str_replace('controller', $target, __FILE__);
+if(is_file($pathFile)){
+    require($pathFile);
+}

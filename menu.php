@@ -12,8 +12,8 @@
         <div id="navbar" class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
             <li><a href="#" onClick="navega('')">Home</a></li>
-            <li><a href="#" onClick="navega('modulos/form/cadastro')">Formulários</a></li>
-            <li><a href="#" onClick="navega('')">Contact</a></li>
+            <li><a href="#" onClick="navega('modulos/form/controller')">Formulários</a></li>
+            <li><a href="logout.php">Logout</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

@@ -1,18 +1,24 @@
 <!DOCTYPE HTML>
 <?php
-set_time_limit(0);
 require 'vendor/autoload.php';
-
 use Parse\ParseClient;
 use Parse\ParseUser;
+use Parse\ParseSessionStorage;
+
+set_time_limit(0);
+
+session_start();
+
 ParseClient::initialize('rj63ADuUbYBR6zDxxa1oh0OGSGkTjYnQMfkzPk4z', 'Y7DrDxQa3NXUanN3ecPfZdZ9BRp9PrsiVk61hPnB', 'bGPHnB5JccLtSX7M1goS8vMdskuPqi0TdcpWCgpG');
 
 $currentUser = ParseUser::getCurrentUser();
+
 if(!$currentUser){
     header("Location: login.php");
 }
 
 define('ACAO', ((isset($_POST['acao']) && $_POST['acao'] != '') ? $_POST['acao'] : '')); //facilitando o uso da acao - garantindo que nao será editada na execucao, alem de acesso direto nos metodos... 
+define('ROOT', dirname(__FILE__));
 ?>
 
 <!DOCTYPE html>
@@ -54,6 +60,8 @@ define('ACAO', ((isset($_POST['acao']) && $_POST['acao'] != '') ? $_POST['acao']
     <div class="container">
 
         <form id="form1" method="post" >
+            <input type="hidden" name="page" id="page" value="" />
+            <input type="hidden" value="" id="acao" name="acao"/>
             <?php
             $page = "home";
             if (count($_POST) > 0){
@@ -62,8 +70,6 @@ define('ACAO', ((isset($_POST['acao']) && $_POST['acao'] != '') ? $_POST['acao']
             }
             include "$page.php";
             ?>
-            <input type="hidden" name="page" id="page" value="" />
-            <input type="hidden" value="" id="acao" name="acao"/>
         </form>
 
     </div><!-- /.container -->

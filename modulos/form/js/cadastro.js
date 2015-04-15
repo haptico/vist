@@ -16,7 +16,7 @@ function gravar(){
     if(nomeForm != ""){
         $("#incluir").val("S");
         $("#acao").val("GRAVAR");
-        navega("modulos/form/cadastro");
+        navega("modulos/form/controller");
     }else{
         alert("Forneça um nome para o formulário.");
     }

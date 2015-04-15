@@ -1,30 +1,35 @@
-<?php
-use Parse\ParseQuery;
-use Parse\ParseObject;
-$msg = "";
-if (isset($_POST["incluir"]) && $_POST["incluir"] == "S") {
-    $nomeForm = trim($_POST["nome_form"]);
-    if ($nomeForm <> "") {
-        $query = new ParseQuery("form");
-        $query->equalTo("nome", $nomeForm);
-        $results = $query->find();
-        if (count($results) > 0) {
-            $msg = "Já existe um formulário cadastrado com esse nome";
+<div class="h1">Formulários</div>
+<div class="row-fluid">
+    <div class="span12">
+        <ul class="nav nav-pills">
+            <li class="active"><a href="javascript:editar(0);" title="Novo registro" >Novo registro</a></li>
+        </ul>
+        <?
+        if ($data['corpoTabela'] != '') {
+            ?>
+            <table id="dataTables" class="table table-striped table-bordered table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th width="90px">Ações</th>
+                        <th>Nome</th>
+                        <th>Criado Em</th>
+                        <th>Criado Por</th>
+                        <th>Atualizado Em</th>
+                        <th>Atualizado Por</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?= $data['corpoTabela'] ?>
+                </tbody>
+            </table>
+            <?
         } else {
-            $form = ParseObject::create("form");
-            $form->set("nome", $nomeForm);
-            $form->save();
-            $msg = "Formulário criado com sucesso.";
+            echo '<div class="alert alert-block">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    <h4>Aviso!</h4>Não há registros.
+                  </div>';
         }
-    } else {
-        $msg = "Informe o nome do formulário";
-    }
-}
-?>
-<script type="text/javascript" src="modulos/form/js/cadastro.js"></script>
-<div>
-    <input type="hidden" value="<?= $msg ?>" id="msg" name="msg"/>
-    <input type="hidden" name="incluir" id="incluir" value="" />
-    Formulário: <input type="text" id="nome_form" name="nome_form" />
-    <input type="button" id="btn_gravar" value="Enviar" />
+        ?>
+    </div>
 </div>
+<script type="text/javascript" src="modulos/form/js/lista.js?<?= filemtime(ROOT . 'modulos/form/js/lista.js'); ?>"></script>

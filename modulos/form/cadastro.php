@@ -1,10 +1,6 @@
-<?php
-
-?>
-<script type="text/javascript" src="modulos/form/js/cadastro.js"></script>
+<script type="text/javascript" src="modulos/form/js/cadastro.js?<?= filemtime(ROOT . 'modulos/form/js/cadastro.js'); ?>"></script>
+<div class="h1">Formulários</div>
 <div>
-    <input type="hidden" value="<?= $msg ?>" id="msg" name="msg"/>
-    <input type="hidden" name="incluir" id="incluir" value="" />
-    Formulário: <input type="text" id="nome_form" name="nome_form" />
+    Formulário: <input type="text" id="nome_form" name="nome_form" value="<?=$data["nomeForm"]?>"/>
     <input type="button" id="btn_gravar" value="Enviar" />
 </div>

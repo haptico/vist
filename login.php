@@ -1,11 +1,15 @@
 <?
-session_start();
 set_time_limit(0);
 require 'vendor/autoload.php';
 
 use Parse\ParseUser;
 use Parse\ParseClient;
+use Parse\ParseException;
+use Parse\ParseSessionStorage;
+session_start();
+
 ParseClient::initialize('rj63ADuUbYBR6zDxxa1oh0OGSGkTjYnQMfkzPk4z', 'Y7DrDxQa3NXUanN3ecPfZdZ9BRp9PrsiVk61hPnB', 'bGPHnB5JccLtSX7M1goS8vMdskuPqi0TdcpWCgpG');
+ParseClient::setStorage( new ParseSessionStorage() );
 
 if(count($_POST)>0){
     $usuario = trim($_POST["usuario"]);
@@ -14,10 +18,15 @@ if(count($_POST)>0){
         try {
             $user = ParseUser::logIn($usuario, $senha);
             if($user){
+                $msg = "Login realizado com sucesso";
                 header("Location: index.php");
             }
         } catch (ParseException $error) {
-            $msg = $error->getMessage();
+            if($error->getCode() == 101){
+                $msg = "Erro: Credenciais inválidas.";
+            }else{
+                $msg = "Erro: ".$error->getCode()." ".$error->getMessage();
+            }
         }
     }else{
         $msg = "Preencha os campos Login e Senha.";
@@ -61,7 +70,7 @@ if(count($_POST)>0){
                 <form method="post" action="#" id="login">
                     <input type="hidden" name="acao" value="LOGIN" />
                     <fieldset>
-                        <h1><small><a class="brand cufon-font-blk" href="#">Vistoria</a></small></h1>
+                        <h1><small><span class="brand cufon-font-blk">Vistoria</span></small></h1>
                         <div class="control-group">
                             <label class="control-label cufon-font" for="login">Login</label>
                             <div class="controls">
@@ -108,12 +117,12 @@ if(count($_POST)>0){
 
             </section>
 
-            <!-- Login page navigation >
+            <!-- Login page navigation -->
             <nav>
                 <ul>
-                    <li><a class="cufon-font" href="#" id="PerdeuAsenha">Perdeu a senha?</a></li>
-                    <li><a class="cufon-font" href="#" id="voltar" style="display: none;">Voltar</a></li>
-                    <li><a class="cufon-font" href="#">Suporte</a></li>
+                    <li><a class="cufon-font" href="registro.php" id="registro">Crie uma conta</a></li>
+                    <!--li><a class="cufon-font" href="#" id="voltar" style="display: none;">Voltar</a></li>
+                    <li><a class="cufon-font" href="#">Suporte</a></li-->
                 </ul>
             </nav>
             <!-- Login page navigation -->
